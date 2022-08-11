@@ -1,7 +1,9 @@
 import './styles.css'
-import { isValid } from './utils'
+import { openModal, isValid } from './utils'
 import { Question } from './api'
 import { renderList } from './render'
+import { authFormHtml } from './auth'
+
 
 //первый запуск приложения
 window.addEventListener('load', renderList)
@@ -10,6 +12,11 @@ const form = document.getElementById('form')
 //для эффективности можно искать в родительском элементе
 const input = form.querySelector('#question-input')
 const button = form.querySelector('#submit')
+const modalBtn = document.getElementById('modal-btn')
+
+modalBtn.addEventListener('click', () => {
+    openModal('Authentication', authFormHtml())
+})
 
 const submitFormHandler = (event) => {
     event.preventDefault()
