@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "name": "user1",
+      "password": "123",
+      "id": 2
+    },
+    {
+      "name": "admin",
+      "password": "123",
+      "id": 3
+    }
+  ],
+  "questions": [
+    {
+      "text": "My new question",
+      "date": "2022-08-11T12:18:45.666Z",
+      "userId": 3,
+      "id": 1
+    }
+  ]
+}
