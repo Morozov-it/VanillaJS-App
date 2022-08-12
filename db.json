@@ -9,6 +9,11 @@
       "name": "admin",
       "password": "123",
       "id": 3
+    },
+    {
+      "name": "test",
+      "password": "123",
+      "id": 4
     }
   ],
   "questions": [
@@ -16,7 +21,15 @@
       "text": "My new question",
       "date": "2022-08-11T12:18:45.666Z",
       "userId": 3,
+      "author": "admin",
       "id": 1
+    },
+    {
+      "text": "Test with user name",
+      "date": "2022-08-12T12:32:17.360Z",
+      "userId": 3,
+      "author": "admin",
+      "id": 2
     }
   ]
 }

@@ -1,41 +1,60 @@
 import './styles.css'
-import { openModal, isValid } from './utils'
+import { isValid, errorHtml } from './utils'
 import { Question } from './api'
 import { renderList } from './render'
-import { authFormHtml } from './auth'
+import { authModal } from './auth'
+import { regModal } from './reg'
+import { addLoader, removeLoader, getAuthor } from './utils'
+
+export const user = () => JSON.parse(localStorage.getItem('user'))
 
 
 //первый запуск приложения
-window.addEventListener('load', renderList)
-
-const form = document.getElementById('form')
-//для эффективности можно искать в родительском элементе
-const input = form.querySelector('#question-input')
-const button = form.querySelector('#submit')
-const modalBtn = document.getElementById('modal-btn')
-
-modalBtn.addEventListener('click', () => {
-    openModal('Authentication', authFormHtml())
+window.addEventListener('load', async () => {
+    getAuthor(!!user() && user().name)
+    if (!user()) {
+        renderList()
+        return authModal()
+    }
+    addLoader()
+    const questions = await Question.getAllByUser(user().id)
+    renderList(questions)
+    removeLoader()
 })
 
-const submitFormHandler = (event) => {
+
+//модалка регистрации
+const reg = document.getElementById('reg-modal')
+reg.addEventListener('click', () => {
+    regModal()
+})
+
+
+//форма добавления вопроса
+const form = document.getElementById('form')
+const input = form.querySelector('#question-input')
+const button = form.querySelector('#submit')
+
+const submitFormHandler = async (event) => {
     event.preventDefault()
-
-    if (isValid(input.value)) {
-        const question = {
-            text: input.value.trim(),
-            date: new Date().toJSON(),
-            userId: 3
+    try {
+        if (user()) {
+            addLoader()
+            const question = {
+                text: input.value.trim(),
+                date: new Date().toJSON(),
+                userId: user().id,
+                author: user().name
+            }
+            await Question.create(question)
+            input.value = ''
+            input.classList = ''
+            const questions = await Question.getAllByUser(user().id)
+            renderList(questions)
+            removeLoader()
         }
-
-        Question.create(question)
-            .then(() => {
-                input.value = ''
-                input.classList = ''
-                button.disabled = true
-            })
-            .then(renderList)
-            .catch((e) => console.log(e.message))
+    } catch (e) {
+        input.after(errorHtml(e.message))
     }
 }
 
@@ -45,15 +64,13 @@ input.addEventListener('input', () => {
 form.addEventListener('submit', submitFormHandler)
 
 
-//Testing api methods
-// Question.getAll()
-//     .then((response) => response.json())
-//     .then((data) => console.log(data))
-//     .catch((error) => console.log(error))
+//логика модального окна
+const modalBtn = document.getElementById('modal-btn')
+modalBtn.innerText = 'all'
+modalBtn.addEventListener('click', () => {
+    
+})
 
-// Question.getOne(3)
-//     .then((response) => response.json())
-//     .then((data) => console.log(data))
-//     .catch((error) => console.log(error))
+
 
 

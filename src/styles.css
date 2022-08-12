@@ -45,8 +45,13 @@ button {
     }
 }
 
-.author {
+.author-name {
     font-size: .8rem;
+}
+.mui-dropdown__menu {
+    text-align: center;
+    min-width: 100%;
+    cursor: pointer;
 }
 
 .floating-btn {
